@@ -1,0 +1,27 @@
+{
+    "name": "ipayroll-sdk-php",
+    "type": "library",
+    "description": "iPayroll API v1 client",
+    "homepage": "https://github.com/iPayroll/ipayroll-sdk-php",
+    "keywords": ["ipayroll", "php", "api", "rest"],
+    "license": "",
+    "authors": [
+        {
+            "name": "iPayroll Team",
+            "homepage": "http://www.ipayroll.co.nz"
+        }
+    ],
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "jms/serializer": "^1.9.0",
+        "league/oauth2-client": "^2.2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0 || ^5.5"
+    },
+    "autoload": {
+        "psr-4": { "Ipayroll\\": "lib/Ipayroll/" }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
