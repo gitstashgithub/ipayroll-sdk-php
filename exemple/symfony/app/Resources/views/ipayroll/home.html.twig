@@ -1,0 +1,8 @@
+{% if isConnected == false %}
+    <a href="/ipayroll/connection">Connect to iPayroll</a>
+{% else %}
+    <h3>Connected to iPayroll</h3>
+    <p> Access token: {{ accessToken }}</p>
+    <a href="/ipayroll/costcentres">Cost centre</a>
+    <a href="/ipayroll/employees">Employee</a>
+{% endif %}
