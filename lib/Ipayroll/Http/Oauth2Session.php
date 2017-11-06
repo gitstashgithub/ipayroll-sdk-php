@@ -11,12 +11,21 @@ class Oauth2Session
     private $baseUrl;
     private $provider;
     private $accessToken;
+    private $requester;
+    private $accessTokenUpdater;
 
-    public function __construct($baseUrl, array $options = [], $accessToken)
+    public function __construct($baseUrl, $accessToken, $accessTokenUpdater, array $options = [])
     {
         $this->baseUrl = $baseUrl;
-        $this->provider = new GenericProvider($options);
         $this->accessToken = $accessToken;
+        $this->accessTokenUpdater = $accessTokenUpdater;
+        $this->provider = new GenericProvider($options);
+        $this->requester = new Requester($this, $this->provider, $this->accessToken, $this->baseUrl);
+    }
+
+    public function withAccessTokenUpdater($accessTokenUpdater)
+    {
+        $this->accessTokenUpdater = $accessTokenUpdater;
     }
 
     public function getAuthorizationUrl()
@@ -29,6 +38,7 @@ class Oauth2Session
         $this->accessToken = $this->provider->getAccessToken('authorization_code', [
             'code' => $code
         ]);
+        $this->updateToken($this->accessToken);
         return $this->accessToken;
     }
 
@@ -37,12 +47,21 @@ class Oauth2Session
         $this->accessToken = $this->provider->getAccessToken('refresh_token', [
             'refresh_token' => $this->accessToken->getRefreshToken()
         ]);
+        $this->updateToken($this->accessToken);
         return $this->accessToken;
+    }
+
+    private function updateToken($accessToken)
+    {
+        if($this->accessTokenUpdater != null)
+        {
+            $this->accessTokenUpdater->update($accessToken);
+        }
     }
 
     public function getRequester()
     {
-        return new Requester($this, $this->provider, $this->accessToken, $this->baseUrl);
+        return $this->requester;
     }
 
     public function isConnected()

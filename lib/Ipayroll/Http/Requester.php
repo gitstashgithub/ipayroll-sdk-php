@@ -2,7 +2,6 @@
 
 namespace Ipayroll\Http;
 
-
 use GuzzleHttp\Exception\ClientException;
 use Ipayroll\Exception\AuthorizationException;
 use Ipayroll\Exception\Error;
@@ -17,7 +16,8 @@ class Requester
     private $oauth2Session;
     private $accessToken;
     private $autorefresh = true;
-    private $autorefreshCount = 2;
+    private $autorefreshCount = 3;
+
     public function __construct(Oauth2Session $oauth2Session, GenericProvider $provider, $accessToken, $baseUrl)
     {
         $this->oauth2Session = $oauth2Session;
