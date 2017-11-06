@@ -71,7 +71,7 @@
     "repositories": [
       {
         "type": "path",
-        "url": "../../ipayroll-sdk-php"
+        "url": "../../sdk"
       }
     ]
 }
