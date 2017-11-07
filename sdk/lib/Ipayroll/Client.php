@@ -11,6 +11,7 @@ use Ipayroll\Rest\EmployeePayRatesApi;
 use Ipayroll\Rest\EmployeesApi;
 use Ipayroll\Rest\EmployeesLeaveRequestsApi;
 use Ipayroll\Rest\LeaveRequestsApi;
+use Ipayroll\Rest\Oauth2Api;
 use Ipayroll\Rest\PayElementsApi;
 use Ipayroll\Rest\PayrollsApi;
 
@@ -29,10 +30,7 @@ class Client
 
     public function __construct($client_id, $client_secret, $redirect_uri, array $options = [])
     {
-
         $config = array_merge($this->defaultArray(), $options);
-
-
         $this->session = new Oauth2Session(
             $config['baseUrl'], $config['accessToken'], $config['accessTokenUpdater'],
             ['clientId' => $client_id,
@@ -58,9 +56,9 @@ class Client
         ];
     }
 
-    public function &oauth2()
+    public function oauth2()
     {
-        return $this->session;
+        return new Oauth2Api($this->session);
     }
 
     public function isConnected()

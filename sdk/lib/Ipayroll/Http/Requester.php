@@ -89,7 +89,7 @@ class Requester
     function handleAuthorizationError($e, $request, $count) {
         if($this->autorefresh && $count < $this->autorefreshCount) {
             $accessToken = $this->oauth2Session->refreshAccessToken();
-            $request = $request->withHeader('Authorization', 'Bearer ' . $accessToken->getToken());
+            $request = $request->withHeader('Authorization', 'Bearer ' . $accessToken->getAccessToken());
             return $this->executeRequest($request, ++$count);
         } else {
             throw new AuthorizationException($e->getMessage());

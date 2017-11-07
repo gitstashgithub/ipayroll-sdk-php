@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Ipayroll\Client;
+use Ipayroll\Http\Oauth2AccessToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,15 +25,15 @@ class IpayrollController extends Controller
         ));
     }
 
-    function getClient(SessionInterface $session)
+    /**
+     * @Route("/ipayroll/connectWithToken", name="connectWithToken")
+     */
+    public function connectWithToken(Request $request, SessionInterface $session)
     {
-        $accessToken = $session->get('accessToken');
-        return new Client('d908376c-3d1b-41a9-8358-1fad946e0c57', 'GwUmPqD8s7mGj4d',
-            'http://127.0.0.1:8000/ipayroll/redirect', [
-                'baseUrl' => 'http://localhost:8080/ipayroll',
-                'accessToken' => $accessToken,
-                'accessTokenUpdater' => new TokenUpdater($session)
-            ]);
+        $client = $this->getClient($session);
+        $accessToken = $client->oauth2()->connectWithRefreshToken('dd4bb058-ecca-4bba-a0fc-44e5809e2d26');
+        $accessToken =  $client->oauth2()->connectWithAccessToken($accessToken);
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -54,7 +55,7 @@ class IpayrollController extends Controller
         $code = $request->get('code');
         $accessToken = $client->oauth2()->exchangeAuthorizationCodeForAccessToken($code);
 //        $session->set('accessToken', $accessToken);
-        return $this->redirectToRoute('home', array('accessToken' => $accessToken));
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -201,6 +202,17 @@ class IpayrollController extends Controller
         $get = $client->payrolls()->get('0003');
 
         return $this->toListPage($list, $get);
+    }
+
+    function getClient(SessionInterface $session)
+    {
+        $accessToken = $session->get('accessToken');
+        return new Client('d908376c-3d1b-41a9-8358-1fad946e0c57', 'GwUmPqD8s7mGj4d',
+            'http://127.0.0.1:8000/ipayroll/redirect', [
+                'baseUrl' => 'http://localhost:8080/ipayroll',
+                'accessToken' => $accessToken,
+                'accessTokenUpdater' => new TokenUpdater($session)
+            ]);
     }
 
 }

@@ -35,28 +35,21 @@ class Oauth2Session
 
     public function exchangeAuthorizationCodeForAccessToken($code)
     {
-        $this->accessToken = $this->provider->getAccessToken('authorization_code', [
+        $accessToken = $this->provider->getAccessToken('authorization_code', [
             'code' => $code
         ]);
-        $this->updateToken($this->accessToken);
-        return $this->accessToken;
+        return $this->updateToken($accessToken);
     }
 
-    public function refreshAccessToken()
+    public function refreshAccessToken($refreshToken = null)
     {
-        $this->accessToken = $this->provider->getAccessToken('refresh_token', [
-            'refresh_token' => $this->accessToken->getRefreshToken()
-        ]);
-        $this->updateToken($this->accessToken);
-        return $this->accessToken;
-    }
-
-    private function updateToken($accessToken)
-    {
-        if($this->accessTokenUpdater != null)
-        {
-            $this->accessTokenUpdater->update($accessToken);
+        if($refreshToken == null){
+            $refreshToken = $this->accessToken->getRefreshToken();
         }
+        $accessToken = $this->provider->getAccessToken('refresh_token', [
+            'refresh_token' => $refreshToken
+        ]);
+        return $this->updateToken($accessToken);
     }
 
     public function getRequester()
@@ -64,14 +57,19 @@ class Oauth2Session
         return $this->requester;
     }
 
-    public function isConnected()
-    {
-        return $this->accessToken != null;
-    }
-
     public function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    private function updateToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+        if($this->accessTokenUpdater != null)
+        {
+            $this->accessTokenUpdater->update(new Oauth2AccessToken($accessToken));
+        }
+        return new Oauth2AccessToken($accessToken);
     }
 
 }
