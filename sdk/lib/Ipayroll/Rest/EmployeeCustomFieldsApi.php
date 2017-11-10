@@ -4,11 +4,10 @@ namespace Ipayroll\Rest;
 
 use Ipayroll\Http\Requester;
 use Ipayroll\Rest\Requester\all;
-use Ipayroll\Rest\Requester\get;
 
 class EmployeeCustomFieldsApi extends Api
 {
-    use all, get;
+    use all;
 
     protected $url;
     protected $resource = 'Ipayroll\Model\EmployeeCustomField';
@@ -22,12 +21,14 @@ class EmployeeCustomFieldsApi extends Api
 
     public function allByCategory($categoryId)
     {
-        return $this->requester->get($this->url . '/' . $categoryId)->asOne($this->resources);
+        $url = sprintf('%s/%s', $this->url, $categoryId);
+        return $this->requester->get($url)->asOne($this->resources);
     }
 
-    public function get($categoryId, $id)
+    public function getByCategoryAndId($categoryId, $id)
     {
-        return $this->requester->get($this->url . '/' . $categoryId . '/' . $id)->asOne($this->resource);
+        $url = sprintf('%s/%s/%s', $this->url, $categoryId, $id);
+        return $this->requester->get($url)->asOne($this->resource);
     }
 
 }

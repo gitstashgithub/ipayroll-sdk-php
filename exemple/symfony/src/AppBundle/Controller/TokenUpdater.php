@@ -20,4 +20,9 @@ class TokenUpdater
         echo $accessToken;
     }
 
+    public function getAccessToken()
+    {
+        return $this->session->get('accessToken');
+    }
+
 }

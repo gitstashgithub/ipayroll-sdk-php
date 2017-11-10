@@ -2,6 +2,7 @@
 
 namespace Ipayroll\Model;
 
+use JMS\Serializer\Annotation\Type;
 
 class Payslips extends Resources
 {

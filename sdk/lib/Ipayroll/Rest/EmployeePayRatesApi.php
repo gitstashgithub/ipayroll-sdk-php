@@ -14,10 +14,10 @@ class EmployeePayRatesApi extends Api
     protected $resource = 'Ipayroll\Model\PayRate';
     protected $resources = 'Ipayroll\Model\EmployeePayRates';
 
-    public function __construct (Requester $requester, $employeeId)
+    public function __construct(Requester $requester, $employeeId)
     {
-        parent::__construct ($requester);
-        $this->url = sprintf('/api/v1/employees/%d/payrates', $employeeId);
+        parent::__construct($requester);
+        $this->url = sprintf('/api/v1/employees/%s/payrates', $employeeId);
     }
 
 }

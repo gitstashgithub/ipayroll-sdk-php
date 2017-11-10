@@ -3,13 +3,42 @@
 namespace Ipayroll\Model;
 
 
+use JMS\Serializer\Annotation\Type;
+
 class Timesheet extends Resource
 {
+    /**
+     * @Type("string")
+     */
     public $employeeId;
+
+    /**
+     * @Type("integer")
+     */
     public $daysInPeriod;
+
+    /**
+     * @Type("integer")
+     */
     public $totalHours;
+
+    /**
+     * @Type("string")
+     */
     public $paidToDate;
+
+    /**
+     * @Type("string")
+     */
     public $paidFromDate;
+
+    /**
+     * @Type("string")
+     */
     public $message;
-    public $transactions;// = fields.Collection(TimesheetTransaction)
+
+    /**
+     * @Type("ArrayCollection<Ipayroll\Model\TimesheetTransaction>")
+     */
+    public $transactions;
 }

@@ -18,11 +18,6 @@ class Oauth2Api
         return $this->session->getAccessToken() != null;
     }
 
-    public function getAccessToken()
-    {
-        return $this->session->getAccessToken();
-    }
-
     public function getAuthorizationUrl()
     {
         return $this->session->getAuthorizationUrl();

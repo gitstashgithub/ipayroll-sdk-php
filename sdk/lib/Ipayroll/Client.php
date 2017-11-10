@@ -3,6 +3,7 @@
 namespace Ipayroll;
 
 use Ipayroll\Http\Oauth2Session;
+use Ipayroll\Model\TimesheetTransaction;
 use Ipayroll\Rest\CostCentresApi;
 use Ipayroll\Rest\EmployeeCustomFieldsApi;
 use Ipayroll\Rest\EmployeeLeaveBalancesApi;
@@ -14,6 +15,9 @@ use Ipayroll\Rest\LeaveRequestsApi;
 use Ipayroll\Rest\Oauth2Api;
 use Ipayroll\Rest\PayElementsApi;
 use Ipayroll\Rest\PayrollsApi;
+use Ipayroll\Rest\PayslipsApi;
+use Ipayroll\Rest\TimesheetsApi;
+use Ipayroll\Rest\TimesheetTransactionsApi;
 
 
 class Client
@@ -22,7 +26,7 @@ class Client
     const TOKEN_CREDENTIAL_URI_DEFAULT = '/oauth/token';
     const REFRESH_TOKEN_URI_DEFAULT = '/oauth/token';
 
-    const SCOPE_DEFAULT = 'leavebalances payelements payrates leaverequests employees costcentres payslips timesheets payrolls';
+    const SCOPE_DEFAULT = 'leavebalances payelements payrates leaverequests employees costcentres payslips timesheets customfields payrolls';
 
     const API_BASE_URL_DEFAULT = 'http://secure2.Ipayroll.co.nz';
 
@@ -56,14 +60,14 @@ class Client
         ];
     }
 
-    public function oauth2()
-    {
-        return new Oauth2Api($this->session);
-    }
-
     public function isConnected()
     {
         return $this->oauth2()->isConnected();
+    }
+
+    public function oauth2()
+    {
+        return new Oauth2Api($this->session);
     }
 
     public function costCentres()
@@ -96,9 +100,6 @@ class Client
         return new EmployeeLeaveRequestsApi($this->session->getRequester(), $employeeId);
     }
 
-    # def employeesPayslips(self, employee_id):
-    #     return EmployeesPayslipsEndpoint(self.__session.requester(), employee_id)
-
     public function leaveRequests()
     {
         return new LeaveRequestsApi($this->session->getRequester());
@@ -107,6 +108,21 @@ class Client
     public function payElements()
     {
         return new PayElementsApi($this->session->getRequester());
+    }
+
+    public function payslips()
+    {
+        return new PayslipsApi($this->session->getRequester());
+    }
+
+    public function timesheets()
+    {
+        return new TimesheetsApi($this->session->getRequester());
+    }
+
+    public function timesheetsTransactions()
+    {
+        return new TimesheetTransactionsApi($this->session->getRequester());
     }
 
     public function payrolls()
@@ -118,15 +134,5 @@ class Client
     {
         $this->session->withAccessTokenUpdater($accessTokenUpdater);
     }
-
-//    public function payrollCurrentPayslips()
-//    {
-//        return new PayrollPayslipsApi($this->session->getRequester(), 'current');
-//    }
-//
-//    public function payrollPayslips($payrollId    )
-//    {
-//        return new PayrollPayslipsApi($this->session->getRequester(), $payrollId);
-//    }
 
 }

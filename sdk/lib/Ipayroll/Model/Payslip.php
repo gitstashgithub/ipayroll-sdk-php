@@ -2,20 +2,72 @@
 
 namespace Ipayroll\Model;
 
+use JMS\Serializer\Annotation\Type;
 
 class Payslip extends Resource
 {
+    /**
+     * @Type("double")
+     */
     public $totalPayments;
+
+    /**
+     * @Type("double")
+     */
     public $overpayment;
+
+    /**
+     * @Type("double")
+     */
     public $taxCredit;
-    public $yearToDateTotals;// = fields.Collection(YearToDateTotalsEntry)
+
+    /**
+     * @Type("array")
+     */
+    public $yearToDateTotals;
+
+    /**
+     * @Type("double")
+     */
     public $nettPay;
+
+    /**
+     * @Type("string")
+     */
     public $abn;
+
+    /**
+     * @Type("string")
+     */
     public $payslipMessage;
-    public $deductions;// = fields.Collection(PayslipPayrollEmployeeTransaction)
-    public $otherBenefits;// = fields.Collection(PayslipPayrollEmployeeTransaction)
-    public $leaveBalances;// = fields.Collection(PayslipLeaveBalance)
-    public $timesheet;// = fields.Embedded(Timesheet)
-    public $payments;// = fields.Collection(PayslipTransaction)
-    public $payroll;// = fields.Embedded(PayslipPayroll)
+
+    /**
+     * @Type("ArrayCollection<Ipayroll\Model\PayslipPayrollEmployeeTransaction>")
+     */
+    public $deductions;
+
+    /**
+     * @Type("ArrayCollection<Ipayroll\Model\PayslipPayrollEmployeeTransaction>")
+     */
+    public $otherBenefits;
+
+    /**
+     * @Type("ArrayCollection<Ipayroll\Model\PayslipLeaveBalance>")
+     */
+    public $leaveBalances;
+
+    /**
+     * @Type("Ipayroll\Model\Timesheet")
+     */
+    public $timesheet;
+
+    /**
+     * @Type("ArrayCollection<Ipayroll\Model\TimesheetTransaction>")
+     */
+    public $payments;
+
+    /**
+     * @Type("Ipayroll\Model\PayslipPayroll")
+     */
+    public $payroll;
 }

@@ -14,7 +14,7 @@ class Resource
     /**
      * @Type("ArrayCollection<Ipayroll\Model\Link>")
      */
-    public $links; // = fields.Collection(Links)
+    public $links;
 
 
     public function __toString()

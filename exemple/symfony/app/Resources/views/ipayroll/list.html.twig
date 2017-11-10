@@ -3,3 +3,15 @@
 <p>{{ list }}</p>
 <h3>Get</h3>
 <p>{{ get }}</p>
+
+{% if created != null %}
+<h3>Created</h3>
+    {% for cre in created %}
+        <p>{{ cre }}</p>
+    {% endfor %}
+{% endif %}
+
+{% if updated != null %}
+    <h3>Updated</h3>
+    <p>{{ updated }}</p>
+{% endif %}

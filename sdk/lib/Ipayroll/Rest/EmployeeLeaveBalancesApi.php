@@ -17,6 +17,6 @@ class EmployeeLeaveBalancesApi extends Api
     public function __construct (Requester $requester, $employeeId)
     {
         parent::__construct ($requester);
-        $this->url = sprintf('/api/v1/employees/%d/leaves/balances', $employeeId);
+        $this->url = sprintf('/api/v1/employees/%s/leaves/balances', $employeeId);
     }
 }

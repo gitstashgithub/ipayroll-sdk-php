@@ -3,8 +3,8 @@
 namespace Ipayroll\Rest;
 
 use Ipayroll\Rest\Requester\all;
-use Ipayroll\Rest\Requester\get;
 use Ipayroll\Rest\Requester\create;
+use Ipayroll\Rest\Requester\get;
 
 class CostCentresApi extends Api
 {

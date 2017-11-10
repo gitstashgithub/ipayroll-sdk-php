@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Ipayroll\Client;
 use Ipayroll\Http\Oauth2AccessToken;
+use Ipayroll\Model\CostCentre;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +19,10 @@ class IpayrollController extends Controller
      */
     public function home(Request $request, SessionInterface $session)
     {
+        $tu = new TokenUpdater($session);
         $client = $this->getClient($session);
         return $this->render('ipayroll/home.html.twig', array(
-            'accessToken' => $client->oauth2()->getAccessToken(),
+            'accessToken' => $tu->getAccessToken(),
             'isConnected' => $client->isConnected()
         ));
     }
@@ -66,16 +68,22 @@ class IpayrollController extends Controller
         $client = $this->getClient($session);
         $list = $client->costCentres()->all();
         $get = $client->costCentres()->get('12590');
-        return $this->toListPage($list, $get);
+        $created = $this->createCostCentres($client);
+        return $this->toListPage($list, $get, $created);
     }
 
-    function toListPage($list, $get)
+    public function createCostCentres($client)
     {
-        return $this->render('ipayroll/list.html.twig', array(
-            'object' => 'employee',
-            'list' => $list,
-            'get' => $get
-        ));
+        $cc = new CostCentre();
+        $cc->code = ("codePhp-" . uniqid(rand()));
+        $cc->description = "From php";
+
+        $cc2 = new CostCentre();
+        $cc2->code = ("codePhp-" . uniqid(rand()));
+        $cc2->description = "From php";
+
+        $ccs = [$cc, $cc2];
+        return $client->costCentres()->create($ccs);
     }
 
     /**
@@ -85,8 +93,11 @@ class IpayrollController extends Controller
     {
         $client = $this->getClient($session);
         $employees = $client->employees()->all();
-        $employee = $client->employees()->get('07-610');
-        return $this->toListPage($employees, $employee);
+        $employee = $client->employees()->get('141228');
+        $employee->title = "codePhp-" . uniqid(rand());
+        $client->employees()->update($employee);
+        $updated = $client->employees()->get('141228');
+        return $this->toListPage($employees, $employee, null, $updated);
 
     }
 
@@ -99,7 +110,6 @@ class IpayrollController extends Controller
         $employees = $client->employees()->all();
         $employee = $client->employees()->get('13');
         return $this->toListPage($employees, $employee);
-
     }
 
     /**
@@ -109,7 +119,7 @@ class IpayrollController extends Controller
     {
         $client = $this->getClient($session);
         $list = $client->employeeCustomfields('109')->all();
-        $get = $client->employeeCustomfields('109')->get('6', '6586');
+        $get = $client->employeeCustomfields('109')->getByCategoryAndId('6', '6586');
         return $this->toListPage($list, $get);
     }
 
@@ -124,9 +134,6 @@ class IpayrollController extends Controller
         return $this->toListPage($list, $get);
 
     }
-
-    # def employeesPayslips(self, employee_id):
-    #     return EmployeesPayslipsEndpoint(self.__session.requester(), employee_id)
 
     /**
      * @Route("/ipayroll/employeeLeaveBalances", name="employeeLeaveBalances")
@@ -161,26 +168,6 @@ class IpayrollController extends Controller
         return $this->toListPage($list, $get);
     }
 
-//    /**
-//     * @Route("/ipayroll/payrollCurrentPayslips", name="payrollCurrentPayslips")
-//     */
-//    public function payrollCurrentPayslips(SessionInterface $session)
-//    {
-//        $client = $this->getClient($session);
-//        $list  = $client->payrollCurrentPayslips()->all();
-//        return $this->toListPage($list, null);
-//    }
-//
-//    /**
-//     * @Route("/ipayroll/payrollsPayslips", name="payrollsPayslips")
-//     */
-//    public function payrollsPayslips(SessionInterface $session)
-//    {
-//        $client = $this->getClient($session);
-//        $list  = $client->payrollCurrentPayslips('0003')->all();
-//        return $this->toListPage($list, null);
-//    }
-
     /**
      * @Route("/ipayroll/payElements", name="payElements")
      */
@@ -189,6 +176,30 @@ class IpayrollController extends Controller
         $client = $this->getClient($session);
         $list = $client->payElements()->all();
         $get = $client->payElements()->get('ACC%20FIRST%20WEEK');
+        return $this->toListPage($list, $get);
+    }
+
+    /**
+     * @Route("/ipayroll/payslips", name="payslips")
+     */
+    public function payslips(SessionInterface $session)
+    {
+        $client = $this->getClient($session);
+        $list = $client->payslips()->all();
+        $get = $client->payslips()->getByEmployeeId('977659');
+        $client->payslips()->listByPayroll('0130');
+        $client->payslips()->getByPayrollAndByEmployeeId('0130', '977659');
+        return $this->toListPage($list, $get);
+    }
+
+    /**
+     * @Route("/ipayroll/timesheets", name="timesheets")
+     */
+    public function timesheets(SessionInterface $session)
+    {
+        $client = $this->getClient($session);
+        $list = $client->timesheets()->all();
+        $get = $client->timesheets()->get(653972);
         return $this->toListPage($list, $get);
     }
 
@@ -202,6 +213,17 @@ class IpayrollController extends Controller
         $get = $client->payrolls()->get('0003');
 
         return $this->toListPage($list, $get);
+    }
+
+    function toListPage($list, $get, $created=null, $updated=null)
+    {
+        return $this->render('ipayroll/list.html.twig', array(
+            'object' => 'Resource',
+            'list' => $list,
+            'get' => $get,
+            'created' => $created,
+            'updated' => $updated
+        ));
     }
 
     function getClient(SessionInterface $session)

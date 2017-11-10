@@ -17,7 +17,7 @@ class EmployeeLeaveRequestsApi extends Api
     public function __construct (Requester $requester, $employeeId)
     {
         parent::__construct ($requester);
-        $this->url = sprintf('/api/v1/employees/%d/leaves/requests', $employeeId);
+        $this->url = sprintf('/api/v1/employees/%s/leaves/requests', $employeeId);
     }
 
     public function list_outstanding() {
