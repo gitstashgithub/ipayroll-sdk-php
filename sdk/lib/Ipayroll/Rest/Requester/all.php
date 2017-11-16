@@ -5,8 +5,12 @@ namespace Ipayroll\Rest\Requester;
 
 trait all
 {
-    public function all()
+    public function all($page=0, $size=20)
     {
-        return $this->requester->get($this->url)->asOne($this->resources);
+        $params = array(
+            'page' => $page,
+            'size' => $size
+        );
+        return $this->requester->get($this->url, $params)->asOne($this->resources);
     }
 }

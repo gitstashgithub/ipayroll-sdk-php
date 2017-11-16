@@ -31,19 +31,23 @@ class Requester
             ->build();
     }
 
-    public function get($url)
+    public function get($url, $params = [])
     {
         $request = $this->provider->getAuthenticatedRequest(
             'GET',
-            $this->getUrl($url),
+            $this->getUrl($url, $params),
             $this->accessToken
         );
         return $this->executeRequest($request);
     }
 
-    function getUrl($url)
+    function getUrl($path, $params = [])
     {
-        return $this->baseUrl . $url;
+        $url = $this->baseUrl . $path;
+        if(sizeof($params) > 0) {
+            $url = $url . "?" . http_build_query($params);
+        }
+        return $url;
     }
 
     function executeRequest($request, $count = 0)

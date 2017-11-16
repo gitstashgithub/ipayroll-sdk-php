@@ -66,7 +66,7 @@ class IpayrollController extends Controller
     public function costcentres(Request $request, SessionInterface $session)
     {
         $client = $this->getClient($session);
-        $list = $client->costCentres()->all();
+        $list = $client->costCentres()->all(3, 10);
         $get = $client->costCentres()->get('12590');
         $created = $this->createCostCentres($client);
         return $this->toListPage($list, $get, $created);
