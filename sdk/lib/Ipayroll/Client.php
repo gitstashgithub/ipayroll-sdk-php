@@ -120,9 +120,9 @@ class Client
         return new TimesheetsApi($this->session->getRequester());
     }
 
-    public function timesheetsTransactions()
+    public function timesheetsTransactions($timesheet_id)
     {
-        return new TimesheetTransactionsApi($this->session->getRequester());
+        return new TimesheetTransactionsApi($this->session->getRequester(), $timesheet_id);
     }
 
     public function payrolls()

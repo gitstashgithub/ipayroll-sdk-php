@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Ipayroll\Client;
 use Ipayroll\Http\Oauth2AccessToken;
 use Ipayroll\Model\CostCentre;
+use Ipayroll\Rest\Requester\delete;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +57,6 @@ class IpayrollController extends Controller
         $client = $this->getClient($session);
         $code = $request->get('code');
         $accessToken = $client->oauth2()->exchangeAuthorizationCodeForAccessToken($code);
-//        $session->set('accessToken', $accessToken);
         return $this->redirectToRoute('home');
     }
 
